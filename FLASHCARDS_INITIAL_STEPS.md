@@ -1,137 +1,51 @@
-# SimpleFlashCardWeb — Step‑by‑step prompts (web → mobile)
+# SimpleFlashCardWeb — Planning Mode Prompts
 
-Purpose: ordered prompts to follow while building a web‑first flashcard app that supports categories/topics and can later be migrated to mobile.
+### Prompts (copy & paste into Copilot Chat)
 
-At each step complete the task and answer the short question in parentheses before continuing.
+1) Define one-sentence vision for the flashcard app and decide category structure: flat tags vs nested hierarchy vs single-category-per-deck.
 
-1. Vision & categories
+2) Pick 3 success metrics (DAU, retention, recall accuracy) and list 6 core MVP features including category behavior.
 
-- Define a one‑sentence vision and the role of categories/topics (e.g., "Help language learners memorize vocabulary by topic: Spanish > Travel, Spanish > Food"). (Who is the user, what outcome, how will categories be used?)
+3) Sketch wireframes for: Category browse, Deck list (filtered), Card editor, Study session. Confirm navigation flow feels intuitive.
 
-2. Success metrics & MVP scope
+4) Choose tech stack: React+Vite+TS vs Next.js, IndexedDB vs localStorage, optional backend (Supabase/Firebase/none).
 
-- Pick 3 metrics (DAU, retention, recall accuracy) and list 4–6 must‑have features for MVP. Include whether categories are required at creation or optional. (Metrics + must‑have features + category behavior?)
+5) Implement Category and Deck CRUD with local persistence. Test: create category → create deck → assign to category.
 
-3. High‑level information architecture
+6) Build Card CRUD within a deck: front/back editor, bulk CSV import, tags support. Test: add 5+ cards quickly.
 
-- Decide hierarchy: Category → Deck → Card. Define whether categories are nested or flat, and whether a deck can belong to multiple categories (tags vs category). (Which model?)
+7) Add category browsing UI with deck counts per category and search/filter functionality. Test: filter decks by category.
 
-4. Sketch core screens (low‑fi)
+8) Implement core study session: load due cards → show front → reveal back → rate (0-5) → apply SM-2 scheduler. Add keyboard shortcuts (space, 1-5).
 
-- Draw: Category list/browse, Deck list (filtered by category), Deck detail (card list), Card editor, Study session, Profile/settings. (Do category filters & navigation feel natural?)
+9) Build SM-2 scheduler logic with card fields (easiness, interval, repetitions, nextReviewAt). Test: rating updates nextReviewAt correctly.
 
-5. Choose stack & architecture
+10) Add study scope selector: single deck, category, or all due cards. Test: start session scoped to a category.
 
-- Frontend: React + Vite or Next.js + TypeScript. Local persistence: IndexedDB (local‑first). Backend (optional): Supabase / Postgres + API for cloud sync. (Which choices?)
+11) Implement import/export preserving category metadata: JSON format with category mapping on import. Test: export → import preserves structure.
 
-6. Repo & scaffold
+12) Add progress tracking per deck and category: session accuracy, streaks, time spent. Display analytics dashboard.
 
-- Initialize repo, set TypeScript, linting, Prettier, basic folders: `src/pages` `src/components` `src/lib` `src/services`. Add a lightweight README describing categories. (Scaffold ready?)
+13) Design offline-first PWA: service worker, manifest, IndexedDB caching. Test: study session works offline.
 
-7. Global layout & routing
+14) Add optional cloud sync with conflict resolution: Supabase auth, user namespacing, last-writer-wins strategy.
 
-- Implement header with Category selector, routes: `/categories`, `/categories/:id`, `/decks`, `/decks/:id`, `/decks/:id/study`. (Can users reach decks through categories?)
+15) Implement media support: local image/audio upload with preview, cloud storage URLs if syncing.
 
-8. Data model design (first draft)
+16) Polish accessibility: ARIA labels, keyboard navigation, focus management, color contrast. Test with screen reader.
 
-- Category { id, userId, name, description, parentId?, createdAt }
+17) Add unit tests for SM-2 scheduler and E2E tests for core flows (create → study → rate). Set up CI with GitHub Actions.
 
-- Deck { id, userId, categoryId?, title, description, privacy, createdAt }
+18) Deploy to Vercel/Netlify with auto-deployment on main branch. Set up preview deployments for PRs.
 
-- Card { id, deckId, front, back, media[], tags[], createdAt, metadata }
+19) Add monetization features: free local use, Pro tier with cloud backup and advanced analytics.
 
-- ReviewLog { id, cardId, userId, rating, timestamp }
+20) Implement SEO-optimized public deck discovery with server-side rendering for category pages.
 
-- Scheduler fields on Card: nextReviewAt, interval, easiness, repetitions
+21) Plan PWA to native transition: choose React Native/Expo or Flutter, identify reusable API/logic components.
 
-(Do these entities cover category behavior and queries you need?)
+22) Build native prototype with core features: auth, category browse, study session. Test API reuse from web version.
 
-9. Deck + Category CRUD (local persistence)
+23) Create launch assets: onboarding decks, privacy policy, analytics setup, error monitoring, support channel.
 
-- Build create/edit/delete for categories and decks; allow assigning a deck to a category or multiple categories if you chose tags. Persist to IndexedDB. (Can you create categories and assign decks?)
-
-10. Card CRUD within a deck
-
-- Implement card editor: front/back, optional media, tags; support bulk-add (CSV paste). (Can you add and edit cards quickly?)
-
-11. Category browsing & filters
-
-- Add category browsing UI with counts (decks/cards per category), search and filters, and sort (recent, due). (Can users find decks by category?)
-
-12. Import / Export (include category metadata)
-
-- Export decks with category metadata in JSON; import should map categories (create missing categories or let user choose). Add CSV and Anki compatibility if desired. (Can import/export preserve category structure?)
-
-13. Study session UI (core flow)
-
-- Implement: queue due cards (filterable by category or deck) → show front → reveal → rate (0–5) → record ReviewLog and update scheduler. Add keyboard shortcuts (space, 1–5). (Is the flow smooth and keyboard friendly?)
-
-14. Scheduler implementation (SM‑2 baseline)
-
-- Implement SM‑2 using per‑card fields: easiness, interval, repetitions. Allow a simplified mode (Leitner-style) as an option. (Does scheduler compute nextReviewAt correctly with ratings?)
-
-15. Review queue & category scopes
-
-- Allow study by: single deck, multiple decks, a category, or all due cards. Provide quick scope selector at session start. (Can you start a session scoped to a category?)
-
-16. Progress tracking & category analytics
-
-- Track per‑deck and per‑category stats: session accuracy, retention, streaks, time spent. Show leaderboard or progress bar per category. (Are category analytics visible and useful?)
-
-17. Sync strategy & account model
-
-- Decide sync approach: optional cloud sync (Supabase) vs manual import/export. If cloud: implement user auth and map categories + decks to user namespace; handle conflicts per deck/card. (Which sync model?)
-
-18. Auth & cloud persistence (optional)
-
-- Add sign-in flow (email / Supabase Auth). On sync: push categories, decks, cards, and logs. Implement per‑deck conflict resolution (last‑writer‑wins or merge prompt). (Does the same data show on another device after sync?)
-
-19. Offline support & PWA
-
-- Add service worker and manifest; enable offline reading and studying using IndexedDB. Queue operations while offline and sync when online. (Can users study offline and sync later?)
-
-20. Media support (images/audio) & storage
-
-- Support local preview; if using cloud sync, store media in cloud storage and reference URLs in cards. Include size limits and compression. (Are media assets attached and synced?)
-
-21. Accessibility & keyboard polish
-
-- Ensure ARIA labels, focus handling, color contrast, and full keyboard controls for study sessions. (Accessible for keyboard/screen‑reader users?)
-
-22. Tests: unit & E2E
-
-- Unit test scheduler logic and import/export. E2E test main flows (category → deck → cards → study) with Playwright or Cypress. (Do tests pass locally/CI?)
-
-23. CI / CD and deployment
-
-- Add GitHub Actions: run tests, lint, and deploy to Vercel / Netlify on `main`. Add preview deploys for PRs. (Does CI run and produce deployments?)
-
-24. Monetization & backups (optional)
-
-- Offer free local use; Pro: cloud backups, unlimited cloud decks, advanced analytics, export history. Consider charging per‑team for teacher features. (Which paid features first?)
-
-25. SEO & public decks for discovery
-
-- Make public decks discoverable via SEO and category pages (server side or pre-rendered). Seed high‑quality public decks per category to attract users. (Which categories to seed?)
-
-26. PWA → native transition plan
-
-- Verify PWA behavior for offline and notifications. For native: pick Expo/React Native or Flutter. Reuse API and scheduler logic where possible. (Which native stack?)
-
-27. Native prototype tasks (if chosen)
-
-- Create minimal native app with sign‑in, category browse, deck list, and study session. Reuse API for sync. (Does the native prototype reuse web APIs?)
-
-28. Launch checklist & monitoring
-
-- On launch: onboarding decks, privacy policy, analytics (D1/D7/D30 retention), error monitoring, basic support channel. (Ready to promote?)
-
----
-
-## Quick next actions (pick one)
-
-- Create project scaffold (React + Vite + TS) and implement Category + Deck CRUD (local).  
-- Implement study session scoped to a Category (local only) and SM‑2 scheduler.  
-- Add Import/Export preserving categories.  
-
-Tell me which quick action to expand into a concrete task list or if you want starter code for the scaffold or SM‑2 scheduler pseudocode.
+24) Set up monitoring dashboard for D1/D7/D30 retention, session completion rates, and category usage patterns.
