@@ -243,6 +243,23 @@ button.btn {
     transform: translateY(-4px)
 }
 
+.btn-finish-quiz {
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: none;
+    background: #ef4444;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 16px;
+    transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.btn-finish-quiz:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(239, 68, 68, 0.3);
+}
+
 /* Responsive */
 @media (max-width: 900px) {
     .app {

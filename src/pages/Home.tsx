@@ -31,6 +31,7 @@ export default function Home() {
                     <input value={newDeck} onChange={e => setNewDeck(e.target.value)} placeholder="New deck title" />
                     <button onClick={addDeck}>Add deck</button>
                 </div>
+                <button className="btn-finish-quiz">Finish Quiz</button>
             </section>
         </div>
     )
